@@ -1,0 +1,13 @@
+tags: [
+    {
+        name: div
+        hasChild: true
+    }
+    {
+        name: input
+    }
+]
+
+name: div
+type: dom
+hasChild: true

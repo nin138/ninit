@@ -1,0 +1,10 @@
+group: group_name
+project: prod_name
+version: 1.0.0
+root: ./app
+css: ./style
+dependency: [
+    std
+]
+
+
