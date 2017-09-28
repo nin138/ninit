@@ -1,0 +1,33 @@
+{
+  "name": "ninit",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack --colors --config ./webpack.config.dev.js",
+    "run": "node ./dist/bundle.js",
+    "prestart": "npm run build",
+    "start": "npm run run"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yanokunpei/ninit.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/yanokunpei/ninit/issues"
+  },
+  "dependencies": {
+    "@types/node": "^7.0.5",
+    "@types/fs-extra": "^4.0.2",
+    "fs-extra": "^4.0.2"
+  },
+  "homepage": "https://github.com/yanokunpei/ninit#readme",
+  "devDependencies": {
+    "ts-loader": "^2.3.7",
+    "webpack": "^3.6.0"
+  }
+}
