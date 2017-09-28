@@ -1,8 +1,14 @@
 import * as fs from "fs";
 
-export const readFile = async(path: string): Promise<string> => {
-  return fs.readFile(path, 'utf8', (err: string, text: string) => {
-    if(err) throw new Error(err);
-    return text;
-  });
+export const readFile = (path: string): Promise<string> => {
+  return new Promise(((resolve, reject) => {
+    const encode: string = "utf8";
+    fs.readFile(`${process.cwd()}/${path}`,encode, (err: NodeJS.ErrnoException, data: string) => {
+      if(err) reject(err);
+      resolve(data);
+    });
+  }));
 };
+
+
+
