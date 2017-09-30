@@ -5,6 +5,10 @@ root: ./app
 css: ./style
 dependency: [
     std
+    ghh
+    gvhb
+    ghj
+
 ]
 
 

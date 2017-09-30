@@ -3,6 +3,7 @@ src/*.js
 node_modules
 *.log
 /dist
+/ninit
 
 # Created by .ignore support plugin (hsz.mobi)
 ### Example user template template
