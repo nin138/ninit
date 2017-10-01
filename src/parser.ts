@@ -1,28 +1,32 @@
 export class Parser {
   private index = 0;
   __text: string;
+  private result: any = {};
   // private lines = [];
   constructor(private text: string) { this.__text = text; }
   async parse() {
     while(this.text.length > this.index) {
-      await this.toLines();
+      const ret = await this.read();
+      if(ret.key) this.result[ret.key] = ret.value;
     }
+    console.log(this.result);
   }
   private getLineNumber(index: number) {
     return this.__text.substr(0, index).split("").filter(c => c == "\n").length + 1
   }
-  private async toLines() {
+  private async read() {
     const key = await this.getKey();
     const value = await this.getValue();
-    console.log(`${key} \\\\ ${value}`);
-    return 1;
+    return { key, value };
   }
-  private async getKey(): Promise<string> {
-    const key = this.readTo(/:/).line.trim();
+  private getKey(): string {
+    const ret = this.readTo(/:/);
+    if(ret.end) return "";
+    const key = ret.line.trim();
     if(!/[a-z|A-Z]/.test(key[0]) || key.includes("\n") || key.includes(" ")) throw new Error(`key is incorrect at line: ${this.getLineNumber(this.index)}`);
     return key;
   }
-  private async getValue(): Promise<string> {
+  private getValue(): string {
     const type = this.readTo(/\S/).match;
     switch(type) {
       case "[": return this.readArray();
@@ -30,16 +34,19 @@ export class Parser {
       default: return type + this.readTo(/\s/).line;
     }
   }
-  private async readArray() {
-    console.log(this.text[this.index]);
-    return this.readTo(/]/).line;
+  private readArray(): string {
+    const body = this.readTo(/]/).line
+        .split(/\n|,/)
+        .filter(it => it.trim())
+        .map(it => it.trim());
+    return "[" + body + "]";
   }
-  private readTo(reg: RegExp) {
+  private readTo(reg: RegExp): {line: string, match: string, end?: boolean } {
     let line = "";
     while(!reg.test(this.text[this.index])) {
       line += this.text[this.index];
       this.index++;
-      if(this.text.length < this.index - 1) throw new Error("fin");
+      if(this.text.length < this.index - 1) return { end: true, line: "", match: "" };
     }
     const match = this.text[this.index];
     this.index++;
