@@ -5,8 +5,13 @@ import {Parser} from "./parser";
 export const current_dir = process.cwd() + "/";
 export const out_dir = `${process.cwd()}/ninit/`;
 
-readFile("nin/index.nin")
+// readFile("nin/index.nin")
+readFile("nin/src/app.nin")
     .then((text: string) => onReadIndex(text))
+    .then(res => {
+      console.log("fin");
+      console.log(res);
+    })
     .catch(e => { throw e });
 
 const onReadIndex = (text: string) => {

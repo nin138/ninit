@@ -6,11 +6,11 @@ actions: [
     inc: {}
     dec: {num: number}
 ]
-reducer: [
-    change: { state.text = action.text }
-    inc: { num = state.num + 1 }
-    dec: { num = state.num - action.num }
-]
+reducer: {
+    change: state.text = action.text
+    inc: num = state.num + 1
+    dec: num = state.num - action.num
+}
 props: []
 child: [
     {
