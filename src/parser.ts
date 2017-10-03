@@ -1,9 +1,8 @@
 export class Parser {
   private index = 0;
-  __text: string;
   private result: any = {};
   // private lines = [];
-  constructor(private text: string) { this.__text = text; }
+  constructor(private text: string) { console.log("text is//" + this.text) }
   async parse() {
     while(this.text.length > this.index) {
       const ret = await this.read();
@@ -12,7 +11,7 @@ export class Parser {
     return (this.result === {})? this.text : this.result;
   }
   private getLineNumber(index: number) {
-    return this.__text.substr(0, index).split("").filter(c => c == "\n").length + 1
+    return this.text.substr(0, index).split("").filter(c => c == "\n").length + 1
   }
   private async read() {
     const key = await this.readKey();
@@ -25,6 +24,7 @@ export class Parser {
     const key = ret.line.trim();
     if(!/[a-z|A-Z]/.test(key[0]) || key.includes("\n") || key.includes(" "))
       throw new Error(`key is incorrect \nkey is: ${key}\n at line: ${this.getLineNumber(this.index)} near\n ${this.text.substr(this.index - 15, 30)}`);
+    console.log("key is //" + key);
     return key;
   }
   private getValue(): any {
@@ -32,7 +32,9 @@ export class Parser {
     switch(type) {
       case "[": return this.readArray();
       case "{": return this.readObject();
-      default: return type + this.readTo(/\s/).line;
+      default: {
+        return type + this.readTo(/\n/).line.trim();
+      }
     }
   }
   private readObject(): Object {
@@ -60,7 +62,7 @@ export class Parser {
     while(!reg.test(this.text[this.index])) {
       line += this.text[this.index];
       this.index++;
-      if(this.text.length < this.index - 1) return { end: true, line: "", match: "" };
+      if(this.text.length < this.index - 1) return { end: true, line: line, match: "" };
     }
     const match = this.text[this.index];
     this.index++;
