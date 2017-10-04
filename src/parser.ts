@@ -1,7 +1,7 @@
 export class Parser {
   private index = 0;
   private result: any = {};
-  // private lines = [];
+
   constructor(private text: string) { console.log("text is//" + this.text) }
   async parse() {
     while(this.text.length > this.index) {
@@ -32,14 +32,10 @@ export class Parser {
     switch(type) {
       case "[": return this.readArray();
       case "{": return this.readObject();
-      default: {
-        return type + this.readTo(/\n/).line.trim();
-      }
+      default: return type + this.readTo(/\n/).line.trim();
     }
   }
   private readObject(): Object {
-
-    console.log("obj");
     let objStr = "";
     let tmp = this.readTo(/}/).line.trim() + "}";
     objStr += tmp;
@@ -47,7 +43,6 @@ export class Parser {
       tmp = this.readTo(/}/).line + "}";
       objStr += tmp;
     }
-    console.log("str= " + objStr.slice(0, -1));
     return new Parser(objStr.slice(0, -1)).parse();
   }
   private readArray(): Array<any> {

@@ -1,11 +1,12 @@
 name: app
 use: [ std ]
-state: [ text: string, num: number ]
-actions: [
+store: [ text: string, num: number ]
+state: []
+actions: {
     change: { text: string }
     inc: {}
-    dec: {num: number}
-]
+    dec: { num: number }
+}
 reducer: {
     change: state.text = action.text
     inc: num = state.num + 1
