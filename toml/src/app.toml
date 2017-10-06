@@ -1,0 +1,36 @@
+name = "app"
+use = [ "std" ]
+[store]
+text = "string"
+num = "number"
+state = []
+[actions]
+    [change]
+        text = "string"
+    [inc]
+    [dec]
+        num = "number"
+
+[reducer]
+    change = "state.text = action.text"
+    inc = "num = state.num + 1"
+    dec = "num = state.num - action.num"
+
+props = []
+
+[[child]]
+    type = "std.HTML.input"
+    [child.attribute]
+        type = "text"
+    id = "aaa"
+    parent = "root"
+    child = [  ]
+    class = [ "aaa", "bbb" ]
+[[child]]
+    type = "std.HTML.input"
+    [child.attribute]
+        type = "number"
+    id = "bbb"
+    parent = "root"
+    child = [  ]
+    class = [ "aaa", "bbb" ]

@@ -1,0 +1,6 @@
+[[tags]]
+    name = "div"
+    hasChild = true
+[[tags]]
+    name = "input"
+    hasChild = false
