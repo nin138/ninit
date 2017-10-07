@@ -18,19 +18,20 @@ state = []
 
 props = []
 
-[[child]]
+[[node]]
     type = "std.HTML.input"
-    [child.attribute]
-        type = "text"
     id = "aaa"
     parent = "root"
     child = [  ]
     class = [ "aaa", "bbb" ]
-[[child]]
+    [node.attribute]
+            type = "text"
+[[node]]
     type = "std.HTML.input"
-    [child.attribute]
-        type = "number"
     id = "bbb"
     parent = "root"
     child = [  ]
     class = [ "aaa", "bbb" ]
+    [node.attribute]
+        type = "number"
+

@@ -21,9 +21,12 @@
     "url": "https://github.com/yanokunpei/ninit/issues"
   },
   "dependencies": {
-    "@types/node": "^7.0.5",
     "@types/fs-extra": "^4.0.2",
-    "fs-extra": "^4.0.2"
+    "@types/node": "^7.0.5",
+    "fs-extra": "^4.0.2",
+    "toml": "^2.3.3",
+    "toml-js": "0.0.8",
+    "typescript": "^2.5.3"
   },
   "homepage": "https://github.com/yanokunpei/ninit#readme",
   "devDependencies": {
