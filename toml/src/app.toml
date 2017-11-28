@@ -1,5 +1,5 @@
 name = "app"
-use = [ "std" ]
+use = ["std"]
 [store]
 text = "string"
 num = "number"
@@ -29,7 +29,7 @@ props = []
 [[node]]
     type = "std.HTML.input"
     id = "bbb"
-    parent = "root"
+    parent = "aaa"
     child = [  ]
     class = [ "aaa", "bbb" ]
     [node.attribute]
