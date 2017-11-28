@@ -21,11 +21,11 @@
     "url": "https://github.com/yanokunpei/ninit/issues"
   },
   "dependencies": {
+    "@sgarciac/bombadil": "0.0.6",
     "@types/fs-extra": "^4.0.2",
     "@types/node": "^7.0.5",
     "fs-extra": "^4.0.2",
-    "toml": "^2.3.3",
-    "toml-js": "0.0.8",
+    "tomlify-j0.4": "^3.0.0",
     "typescript": "^2.5.3"
   },
   "homepage": "https://github.com/yanokunpei/ninit#readme",
