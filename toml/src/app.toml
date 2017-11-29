@@ -23,7 +23,7 @@ props = []
     id = "aaa"
     parent = "root"
     child = [  ]
-    class = [ "aaa", "bbb" ]
+    className = [ "aaa", "bbb" ]
     [node.attribute]
             type = "text"
 [[node]]
@@ -31,7 +31,7 @@ props = []
     id = "bbb"
     parent = "aaa"
     child = [  ]
-    class = [ "aaa", "bbb" ]
+    className = [ "aaa", "bbb" ]
     [node.attribute]
         type = "number"
 
