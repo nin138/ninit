@@ -2,9 +2,6 @@ import {NinComponent, NinComponentNode, NinKeyType} from "./transpiler";
 import {Map} from "immutable";
 import {createTab} from "./util";
 
-const requireImport = [
-    `import * as React from "react";`,
-].join("\n") + "\n";
 
 
 class TsClassCreator {
@@ -41,21 +38,35 @@ class TsClassCreator {
 
 }
 
-export const toTs = (nin: NinComponent): string => {
-  const resolveDependency = (nin: NinComponent): string => {
-    let ts = requireImport;
+class TsFileCreator {
+  private static readonly REQUIRED_IMPORT = [
+    `import * as React from "react";`,
+  ].join("\n") + "\n";
+  private classCreator = new TsClassCreator();
+  private resolveDependency(nin: NinComponent): string {
+    let ts = TsFileCreator.REQUIRED_IMPORT;
     nin.using.map(((it: string) => `import {${nin.name}} from "/${nin.path}";\n`))
         .forEach(it => ts += it);
     return ts;
   };
-  const createKeyType = (arr: Array<NinKeyType>): string => {
+  private createKeyType(arr: Array<NinKeyType>): string {
     return arr.reduce((pre, cur) => `${pre}  ${cur.key}: ${cur.type}\n`, "");
   };
-  const createIFProps = (nin: NinComponent): string => {
-    return `interface Props {\n${createKeyType(nin.props)}}\n`;
+  private createIFProps(nin: NinComponent): string {
+    return `interface Props {\n${this.createKeyType(nin.props)}}\n`;
   };
-  const createIFState = (nin: NinComponent): string => {
+  private createIFState(nin: NinComponent): string {
     if(nin.state.length == 0) return "";
-    return `interface State {\n${createKeyType(nin.props)}}\n`;
+    return `interface State {\n${this.createKeyType(nin.props)}}\n`;
   };
+  create(nin: NinComponent): string {
+    return this.resolveDependency(nin)
+    + this.createIFProps(nin)
+    + this.createIFState(nin)
+    + this.classCreator.create(nin);
+  }
+}
+const tsCreator = new TsFileCreator();
+export const toTs = (nin: NinComponent): string => {
+  return tsCreator.create(nin);
 };
