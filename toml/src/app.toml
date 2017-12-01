@@ -25,7 +25,7 @@ props = []
     child = [  ]
     className = [ "aaa", "bbb" ]
     [node.attribute]
-            type = "text"
+        test = "text"
 [[node]]
     type = "std.HTML.input"
     id = "bbb"
@@ -33,5 +33,5 @@ props = []
     child = [  ]
     className = [ "aaa", "bbb" ]
     [node.attribute]
-        type = "number"
+        test = "number"
 

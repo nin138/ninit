@@ -33,9 +33,9 @@ export interface NinComponentNode {
   type: string//"std.HTML.input"
   id: string
   parent: string
-  child: Array<string>
+  children: Array<string>
   className: Array<string>
-  attribute: Map<string, any>
+  attribute: any
 }
 
 
