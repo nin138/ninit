@@ -1,8 +1,8 @@
 name = "app"
-use = ["std"]
 [store]
 text = "string"
 num = "number"
+props = []
 state = []
 [actions]
     [change]
@@ -16,7 +16,6 @@ state = []
     inc = "num = state.num + 1"
     dec = "num = state.num - action.num"
 
-props = []
 
 [[node]]
     type = "std.HTML.input"
