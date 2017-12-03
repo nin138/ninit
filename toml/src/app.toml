@@ -1,9 +1,9 @@
 name = "app"
+props = []
+state = []
 [store]
 text = "string"
 num = "number"
-props = []
-state = []
 [actions]
     [change]
         text = "string"
