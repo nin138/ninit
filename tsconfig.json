@@ -12,5 +12,9 @@
     "module": "ES2015",
     "target": "es5",
     "jsx": "react"
-  }
+  },
+  "exclude": [
+    "./ninit/**/*",
+    "./template/**/*"
+  ]
 }
