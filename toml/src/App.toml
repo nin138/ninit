@@ -1,4 +1,4 @@
-name = "app"
+name = "App"
 props = []
 state = []
 [store]
@@ -18,18 +18,18 @@ num = "number"
 
 
 [[node]]
-    type = "std.HTML.input"
+    type = "input"
     id = "aaa"
     parent = "root"
-    child = [  ]
+    children = [ "bbb" ]
     className = [ "aaa", "bbb" ]
     [node.attribute]
         test = "text"
 [[node]]
-    type = "std.HTML.input"
+    type = "input"
     id = "bbb"
     parent = "aaa"
-    child = [  ]
+    children = [  ]
     className = [ "aaa", "bbb" ]
     [node.attribute]
         test = "number"

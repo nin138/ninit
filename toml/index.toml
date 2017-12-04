@@ -1,7 +1,7 @@
 group = "group_name"
 project = "prod_name"
 version = "1.0.0"
-root = "./src/app.toml"
+root = "./src/App.toml"
 css = "./style"
 dependency = [
     "std",
