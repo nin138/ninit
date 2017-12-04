@@ -1,21 +1,22 @@
 // import * as fs from "fs-extra";
 // import {readIndex} from "./transpiler";
 
-import {readFile} from "./readFile";
-import {Toml} from "./util";
+
+import {transpile} from "./transpiler";
 
 export const current_dir = process.cwd() + "/";
-export const out_dir = `${process.cwd()}/ninit/`;
 
 
 
 // readFile("nin/index.nin")
-readFile("toml/src/app.toml")
-    .then((text: string) => {
-      const st = Toml.parse(text);
-      console.log(Toml.stringify(st)); // -> {whatever: 1}
-    }).catch(e => { throw e });
-
+// readFile("toml/src/App.toml")
+//     .then((text: string) => {
+//       const st = Toml.parse(text);
+//       console.log(Toml.stringify(st)); // -> {whatever: 1}
+//     }).catch(e => { throw e });
+transpile()
+    .then(() => console.log("ok"))
+    .catch(e => console.log(`error::${e}`));
 
 
 
