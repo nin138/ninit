@@ -1,5 +1,4 @@
 import {NinComponent, NinComponentNode, NinKeyType} from "./transpiler";
-import {Map} from "immutable";
 import {createTab} from "./util";
 
 
@@ -12,7 +11,7 @@ class TsClassCreator {
   }
   private createRender(nin: NinComponent): string {
     let ret = `render() {\n`;
-    const map: Map<string, NinComponentNode> = Map();
+    const map: Map<string, NinComponentNode> = new Map();
     nin.node.forEach(it => map.set(it.id, it));
     const tmp = nin.node.filter(it => it!!.parent == "root");
     if(tmp.length == 0) throw new Error("Empty body Component");
@@ -23,7 +22,7 @@ class TsClassCreator {
     return ret;
   }
   private createJSX(id: string, map: Map<string, NinComponentNode>, tab: number): string {
-    const component = map.get(id);
+    const component = map.get(id)!!;
     const attrs = this.createAttribute(component);
     return `${createTab(tab)}<${component.type}${attrs}>\n`
     + component.children.map(it => this.createJSX(it, map, tab+1)).join("\n") + "\n"
@@ -45,8 +44,10 @@ class TsFileCreator {
   private classCreator = new TsClassCreator();
   private resolveDependency(nin: NinComponent): string {
     let ts = TsFileCreator.REQUIRED_IMPORT;
-    nin.using.map(((it: string) => `import {${nin.name}} from "/${nin.path}";\n`))
-        .forEach(it => ts += it);
+    if(nin.use) {
+      nin.use.map(((it: string) => `import {${nin.name}} from "/${nin.path}";\n`))
+          .forEach(it => ts += it);
+    }
     return ts;
   };
   private createKeyType(arr: Array<NinKeyType>): string {
