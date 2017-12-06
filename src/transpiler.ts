@@ -2,8 +2,9 @@ import {readFile} from "./readFile";
 import {Toml} from "./util";
 import {toTs} from "./toTs";
 import {mkdirsSync, writeFile} from "fs-extra";
+import {copyTemplate} from "./copyTemplate";
 
-interface Config {
+export interface Config {
   group: string
   project: string
   version: string
@@ -103,6 +104,7 @@ const writeTs = async(fileName: string, data: string): Promise<{}> => {
 
 export const transpile = async () => {
   const conf = await readIndex();
+  copyTemplate(conf);
   const components: Array<NinComponent> = await readAllToml(conf);
   for(let c of components) {
     const ts = toTs(c); // require resolve props use children
