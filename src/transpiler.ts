@@ -108,7 +108,6 @@ export const transpile = async () => {
   const components: Array<NinComponent> = await readAllToml(conf);
   for(let c of components) {
     const ts = toTs(c); // require resolve props use children
-    console.log("outdir:"+ c.path);
     await writeTs(`${conf.outDir}/${c.path}/${c.name}.tsx` , ts);
   }
 

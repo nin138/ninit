@@ -10,15 +10,16 @@ class TsClassCreator {
     + "}\n";
   }
   private createRender(nin: NinComponent): string {
-    let ret = `render() {\n`;
+    let ret = `${createTab(1)}render() {\n${createTab(2)}return (\n`;
     const map: Map<string, NinComponentNode> = new Map();
     nin.node.forEach(it => map.set(it.id, it));
     const tmp = nin.node.filter(it => it!!.parent == "root");
     if(tmp.length == 0) throw new Error("Empty body Component");
     if(tmp.length != 1) throw new Error("more than 1 root Node found");
     const root: NinComponentNode = tmp[0];
-    ret += this.createJSX(root.id, map, 2);
-    ret += "}\n";
+    ret += this.createJSX(root.id, map, 3) + "\n";
+    ret += `${createTab(2)})\n`;
+    ret += `${createTab(1)}}\n`;
     return ret;
   }
   private createJSX(id: string, map: Map<string, NinComponentNode>, tab: number): string {
@@ -26,7 +27,7 @@ class TsClassCreator {
     const attrs = this.createAttribute(component);
     return `${createTab(tab)}<${component.type}${attrs}>\n`
     + component.children.map(it => this.createJSX(it, map, tab+1)).join("\n") + "\n"
-    + `${createTab(tab)}</${component.type}>\n`;
+    + `${createTab(tab)}</${component.type}>`;
   };
   private createAttribute(node: NinComponentNode) {
     const ret = Object.keys(node.attribute)

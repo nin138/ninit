@@ -18,19 +18,19 @@ num = "number"
 
 
 [[node]]
-    type = "input"
+    type = "div"
     id = "aaa"
     parent = "root"
     children = [ "bbb" ]
     className = [ "aaa", "bbb" ]
     [node.attribute]
-        test = "text"
+        className = "\"text\""
 [[node]]
-    type = "input"
+    type = "p"
     id = "bbb"
     parent = "aaa"
     children = [  ]
     className = [ "aaa", "bbb" ]
     [node.attribute]
-        test = "number"
+        className = "\"number\""
 
