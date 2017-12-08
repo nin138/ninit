@@ -1,5 +1,5 @@
 import {readFile} from "./readFile";
-import {Toml} from "./util";
+import {createTab, Toml} from "./util";
 import {toTs} from "./toTs";
 import {mkdirsSync, writeFile} from "fs-extra";
 import {copyTemplate} from "./copyTemplate";
@@ -115,7 +115,7 @@ export const transpile = async () => {
     await writeTs(`${conf.outDir}/${c.path}/${c.name}.tsx` , ts);
   }
 
-  // createStore();
+  createStore();
 };
 
 
