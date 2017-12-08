@@ -35,7 +35,7 @@ export interface NinComponent {
 }
 
 export interface NinComponentNode {
-  type: string//"std.HTML.input"
+  tag: string//"std.HTML.input"
   id: string
   parent: string
   children: Array<string>
@@ -105,9 +105,13 @@ const writeTs = async(fileName: string, data: string): Promise<{}> => {
 export const transpile = async () => {
   const conf = await readIndex();
   copyTemplate(conf);
+  console.log("reading...");
   const components: Array<NinComponent> = await readAllToml(conf);
+  console.log("writing...");
   for(let c of components) {
+    console.log("1");
     const ts = toTs(c); // require resolve props use children
+    console.log("2");
     await writeTs(`${conf.outDir}/${c.path}/${c.name}.tsx` , ts);
   }
 

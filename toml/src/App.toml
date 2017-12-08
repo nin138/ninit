@@ -18,19 +18,35 @@ num = "number"
 
 
 [[node]]
-    type = "div"
+    tag = "div"
     id = "aaa"
     parent = "root"
-    children = [ "bbb" ]
+    children = [ "bbb", "c" ]
     className = [ "aaa", "bbb" ]
     [node.attribute]
         className = "\"text\""
 [[node]]
-    type = "p"
+    tag = "p"
     id = "bbb"
+    parent = "aaa"
+    children = [ "d" ]
+    className = [ "aaa", "bbb" ]
+    [node.attribute]
+        className = "\"number\""
+[[node]]
+    tag = "input"
+    id = "c"
     parent = "aaa"
     children = [  ]
     className = [ "aaa", "bbb" ]
     [node.attribute]
-        className = "\"number\""
+        type = "\"number\""
+[[node]]
+    tag = "text"
+    id = "d"
+    parent = "c"
+    children = [  ]
+    className = [ "aaa", "bbb" ]
+    [node.attribute]
+        text = "テスト"
 

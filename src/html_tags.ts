@@ -1,4 +1,9 @@
-export const HTML_TAGS = {
+export interface HTMLTagData {
+  hasChild: boolean,
+  require?: Array<string>
+}
+export const TEXT_NODE = "text";
+export const HTML_TAGS: {[key: string]: HTMLTagData} = {
   section: {hasChild: true},
   nav: {hasChild: true},
   article: {hasChild: true},

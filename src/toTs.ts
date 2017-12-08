@@ -1,5 +1,6 @@
 import {NinComponent, NinComponentNode, NinKeyType} from "./transpiler";
 import {createTab} from "./util";
+import {HTML_TAGS, TEXT_NODE} from "./html_tags";
 
 
 
@@ -25,9 +26,16 @@ class TsClassCreator {
   private createJSX(id: string, map: Map<string, NinComponentNode>, tab: number): string {
     const component = map.get(id)!!;
     const attrs = this.createAttribute(component);
-    return `${createTab(tab)}<${component.type}${attrs}>\n`
+    if(component.tag === TEXT_NODE) return `${createTab(tab)}${component.attribute.text || ""}\n`;
+    if(/[a-z]/.test(component.tag.charAt(0))) {
+      if(!HTML_TAGS[component.tag]) throw new Error(`${component.tag} is not defined in HTML5`);
+      if(!HTML_TAGS[component.tag].hasChild) {
+        return `${createTab(tab)}<${component.tag} />\n`
+      }
+    }
+    return `${createTab(tab)}<${component.tag}${attrs}>\n`
     + component.children.map(it => this.createJSX(it, map, tab+1)).join("\n") + "\n"
-    + `${createTab(tab)}</${component.type}>`;
+    + `${createTab(tab)}</${component.tag}>`;
   };
   private createAttribute(node: NinComponentNode) {
     const ret = Object.keys(node.attribute)
