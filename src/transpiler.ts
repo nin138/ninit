@@ -5,6 +5,7 @@ import {mkdirsSync, writeFile} from "fs-extra";
 import {copyTemplate} from "./copyTemplate";
 import {createStore} from "./createStore";
 import * as Path from "path";
+import {createModule} from "./createModule";
 
 export interface Config {
   group: string
@@ -54,7 +55,7 @@ export const isNinComponent = (o: any) => {
 const readIndex: () => Promise<Config> = async () => {
   const index = await readFile(process.argv[2] || "index.toml");
   const data = Object.assign({root: "./app"}, Toml.parse(index));
-  data.indexPath = (process.argv[2])? Path.dirname(process.argv[2]) : "./index.toml";
+  data.indexPath = (process.argv[2])? Path.dirname(process.argv[2]) : "./";
   data.outDir = process.argv[3] || "./ninit";
   if(data.group && data.project) return data;
   throw new Error("index.toml require group and project");
@@ -70,19 +71,18 @@ const readToml: (path: string, conf: Config) => Promise<NinComponent> = async(pa
 
 const readAllToml: (conf: Config) => Promise<Array<NinComponent>> = async(conf) => {
   const ret: Array<NinComponent> = [];
-  const read = async(path: string, fileName: string) => {
-    console.log(path + fileName);
-    const c = await readToml(path + fileName, conf);
+  const read = async(path: string) => {
+    console.log(path);
+    const c = await readToml(path, conf);
     ret.push(c);
     if(c.use) {
       c.use.forEach(async it => {
-        const nPath = path + it.substring(2).split("/").slice(0, -1).join("/") + "/";
-        await read(nPath, it.split("/").pop()!!)
+        await read(Path.join(Path.dirname(path), it))
       });
     }
   };
-  const path = conf.indexPath + conf.root.substring(2).split("/").slice(0, -1).join("/") + "/";
-  await read(path, conf.root.split("/").pop()!!);
+  const path = Path.join(conf.indexPath, conf.root);
+  await read(Path.join(path));
   return ret;
 };
 
@@ -94,6 +94,10 @@ const writeTs = async(fileName: string, data: string): Promise<{}> => {
       else resolve("ok");
     });
   });
+};
+
+const toOutPath = (conf: Config, path: string) => {
+  return Path.join(conf.outDir, path.substring(conf.indexPath.length));
 };
 
 export const transpile = async () => {
@@ -109,11 +113,13 @@ export const transpile = async () => {
     const ts = toTs(c); // require resolve props use children
     modules.push({name: c.name, path: c.path});
     console.log("2");
-    await writeTs(`${conf.outDir}/${c.path}/${c.name}.tsx` , ts);
+    console.log(`outdir: ${conf.outDir}\ncpath: ${c.path}\ncname: ${c.name}\nout: ${toOutPath(conf, c.path)}`);
+    await writeTs(`${toOutPath(conf, c.path)}/${c.name}.tsx` , ts);
+    await writeTs(`${toOutPath(conf, c.path)}/${c.name}Module.ts`, createModule(c))
   }
-
+  console.log("index: " + conf.indexPath);
   await writeFile(`${conf.outDir}/src/store.ts`, createStore(modules));
-};
 
+};
 
 

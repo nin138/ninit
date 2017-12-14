@@ -9,7 +9,7 @@ export const createStore = (modules: Array<{name: string, path: string}>) => {
 };
 
 const createImport = (modules: Array<{name: string, path: string}>) => {
-  return "import {createStore, combineReducers, Action} from 'redux'" +
+  return "import {createStore, combineReducers, Action} from \"redux\"\n" +
       modules.map(it => `import ${it.name}, {${it.name}Action, ${it.name}State} from "./${it.path}"` )
           .join("\n");
 };
@@ -25,7 +25,7 @@ const createCreateStore = (modules: Array<{name: string, path: string}>) => {
 const createState = (modules: Array<{name: string, path: string}>) => {
   return "export type RootState = {\n" +
       `${createTab(1)}${modules.map(it => `${it.name}: ${it.name}State`).join("\n")}` +
-      "}";
+      "\n}";
 
 };
 
