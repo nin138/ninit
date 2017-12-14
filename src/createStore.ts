@@ -17,7 +17,7 @@ const createImport = (modules: Array<{name: string, path: string}>) => {
 const createCreateStore = (modules: Array<{name: string, path: string}>) => {
   return "export default createStore(\n" +
       `${createTab(1)}combineReducers({\n` +
-      `${modules.map(it => `${createTab(2)}${it.name},`).join("\n")}` +
+      `${modules.map(it => `${createTab(2)}${it.name},`).join("\n")}\n` +
       `${createTab(1)}})\n` +
       ");";
 };

@@ -1,4 +1,4 @@
-import {NinComponent, NinComponentNode, NinKeyType} from "./transpiler";
+import {NinComponent, NinComponentNode} from "./transpiler";
 import {createTab} from "./util";
 import {HTML_TAGS, TEXT_NODE} from "./html_tags";
 
@@ -59,7 +59,7 @@ class TsFileCreator {
     }
     return ts;
   };
-  private createKeyType(arr: Array<NinKeyType>): string {
+  private createKeyType(arr: Array<{key: string, type: string}>): string {
     return arr.reduce((pre, cur) => `${pre}  ${cur.key}: ${cur.type}\n`, "");
   };
   private createIFProps(nin: NinComponent): string {

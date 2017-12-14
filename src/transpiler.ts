@@ -1,28 +1,26 @@
 import {readFile} from "./readFile";
-import {createTab, Toml} from "./util";
+import {Toml} from "./util";
 import {toTs} from "./toTs";
 import {mkdirsSync, writeFile} from "fs-extra";
 import {copyTemplate} from "./copyTemplate";
+import {createStore} from "./createStore";
+import * as Path from "path";
 
 export interface Config {
   group: string
   project: string
   version: string
-  root: string// "/app"
+  root: string
   outDir: string
   dependency: Array<string> //["std"]
   indexPath: string
 }
 
-export interface NinKeyType {
-  key: string
-  type: string
-}
-
 export interface NinComponent {
   use: Array<string> | undefined
-  props: Array<NinKeyType>
-  state: Array<NinKeyType>
+  props: Array<{key: string, type: string}>
+  state: Array<{key: string, type: string}>
+  actions: {[actions: string]: ComponentAction}
   path: string;
   name: string;
   isInline: boolean;
@@ -34,8 +32,10 @@ export interface NinComponent {
   editable: {}
 }
 
+export type ComponentAction = {[params: string]: string }
+
 export interface NinComponentNode {
-  tag: string//"std.HTML.input"
+  tag: string
   id: string
   parent: string
   children: Array<string>
@@ -50,18 +50,12 @@ export const isNinComponent = (o: any) => {
   return true;//todo
 };
 
-const defaultConfig = {
-  root: "/app",
-  outDir: "./ninit",
-  indexPath: `${process.cwd()}/`
-};
-
 
 const readIndex: () => Promise<Config> = async () => {
   const index = await readFile(process.argv[2] || "index.toml");
-  const data = Object.assign(defaultConfig, Toml.parse(index));
-  data.indexPath = (process.argv[2])? data.indexPath + process.argv[2].split("/").slice(0, -1).join("/") + "/" : data.indexPath;
-  data.outDir = process.argv[3] || data.outDir;
+  const data = Object.assign({root: "./app"}, Toml.parse(index));
+  data.indexPath = (process.argv[2])? Path.dirname(process.argv[2]) : "./index.toml";
+  data.outDir = process.argv[3] || "./ninit";
   if(data.group && data.project) return data;
   throw new Error("index.toml require group and project");
 };
@@ -69,7 +63,7 @@ const readIndex: () => Promise<Config> = async () => {
 const readToml: (path: string, conf: Config) => Promise<NinComponent> = async(path, conf) => {
   const file = await readFile(path);
   const t = Toml.parse(file);
-  t.path = path.split("/").slice(0, -1).join("/").substring(conf.indexPath.length);
+  t.path = Path.dirname(path);
   if(!isNinComponent(t)) throw new Error("invalid toml file");
   return t;
 };
@@ -81,9 +75,9 @@ const readAllToml: (conf: Config) => Promise<Array<NinComponent>> = async(conf) 
     const c = await readToml(path + fileName, conf);
     ret.push(c);
     if(c.use) {
-      c.use.forEach(it => {
+      c.use.forEach(async it => {
         const nPath = path + it.substring(2).split("/").slice(0, -1).join("/") + "/";
-        read(nPath, it.split("/").pop()!!)
+        await read(nPath, it.split("/").pop()!!)
       });
     }
   };
@@ -104,6 +98,8 @@ const writeTs = async(fileName: string, data: string): Promise<{}> => {
 
 export const transpile = async () => {
   const conf = await readIndex();
+  const modules: Array<{name: string, path: string}> = [];
+
   copyTemplate(conf);
   console.log("reading...");
   const components: Array<NinComponent> = await readAllToml(conf);
@@ -111,11 +107,13 @@ export const transpile = async () => {
   for(let c of components) {
     console.log("1");
     const ts = toTs(c); // require resolve props use children
+    modules.push({name: c.name, path: c.path});
     console.log("2");
     await writeTs(`${conf.outDir}/${c.path}/${c.name}.tsx` , ts);
   }
 
-  createStore();
+  await writeFile(`${conf.outDir}/src/store.ts`, createStore(modules));
 };
+
 
 
