@@ -35,7 +35,11 @@ const createActionType = (nin: NinComponent) => {
 };
 
 const createState = (nin: NinComponent) => {
-  return ""//todo
+  if(Object.keys(nin.store).length === 0) return "";
+  return `export interface ${nin.name}State {\n` +
+      Object.keys(nin.store)
+          .map(it => `${createTab(1)}${it}: ${nin.store[it]}`)
+          .join("\n");
 };
 
 const createInitialState = (nin: NinComponent) => {

@@ -3,6 +3,7 @@ export interface NinComponent {
   props: Array<{key: string, type: string}>
   state: Array<{key: string, type: string}>
   actions: {[action: string]: ComponentAction}
+  store: {[key: string]: string}
   path: string;
   name: string;
   isInline: boolean;
