@@ -5,6 +5,7 @@ export interface NinComponent {
   actions: {[action: string]: ComponentAction}
   store: {[key: string]: string}
   initialStore: {[key: string]: string}
+  reducer: {[key: string]: string}
   path: string;
   name: string;
   isInline: boolean;

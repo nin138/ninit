@@ -31,7 +31,7 @@ const createActions = (nin: NinComponent) => {
 const createActionType = (nin: NinComponent) => {
   if(Object.keys(nin.actions).length === 0) return "";
   return `export type ${nin.name}Action =\n` +
-      Object.keys(nin.actions).map(it => `${it}Action`).join(" |\n")
+      Object.keys(nin.actions).map(it => `${createTab(1)}${it}Action`).join(" |\n")
 };
 
 const createState = (nin: NinComponent) => {
@@ -39,23 +39,37 @@ const createState = (nin: NinComponent) => {
   return `export interface ${nin.name}State {\n` +
       Object.keys(nin.store)
           .map(it => `${createTab(1)}${it}: ${nin.store[it]}`)
-          .join("\n");
+          .join("\n") +
+      "\n}\n";
 };
 
 const createInitialState = (nin: NinComponent) => {
   return `const initialState: ${nin.name}State = {\n` +
       Object.keys(nin.initialStore)
           .map(it => `${createTab(1)}${it}: ${nin.initialStore[it]}`)
-          .join("\n") +
-      "\n}\n";
+          .join(",\n") +
+      "\n};\n";
 };
 
 const createReducer = (nin: NinComponent) => {
-  return ""//todo
+
+  const createCase = (name: string, fn: string) => {
+    const parse = (fn: string) => {
+      const l = fn.split(" = ");
+      return `${l[0]}: ${l[1]}`;
+    };
+    return `${createTab(2)}case ActionNames.${name}:\n${createTab(3)}return Object.assign({}, state, { ${parse(fn)} });\n`
+  };
+  return `export default function reducer(state: ${nin.name}State = initialState, action: ${nin.name}Action): ${nin.name}State {\n` +
+      `${createTab(1)}switch(action.type) {\n` +
+      Object.keys(nin.reducer)
+          .map(it => createCase(it, nin.reducer[it]))
+          .join("") +
+      `${createTab(2)}default: return state\n` +
+      `${createTab(1)}}\n}\n`;
 };
 
 export const createModule = (nin: NinComponent) => {
-  console.log(nin);
   return [
       createActionNames(nin),
       createActions(nin),
