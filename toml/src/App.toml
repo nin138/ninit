@@ -2,8 +2,11 @@ name = "App"
 props = []
 state = []
 [store]
-text = "string"
-num = "number"
+    text = "string"
+    num = "number"
+[initialStore]
+    text = '"init"'
+    num = "0"
 [actions]
     [actions.change]
         text = "string"

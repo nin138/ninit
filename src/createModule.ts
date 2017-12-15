@@ -43,7 +43,11 @@ const createState = (nin: NinComponent) => {
 };
 
 const createInitialState = (nin: NinComponent) => {
-  return ""//todo
+  return `const initialState: ${nin.name}State = {\n` +
+      Object.keys(nin.initialStore)
+          .map(it => `${createTab(1)}${it}: ${nin.initialStore[it]}`)
+          .join("\n") +
+      "\n}\n";
 };
 
 const createReducer = (nin: NinComponent) => {

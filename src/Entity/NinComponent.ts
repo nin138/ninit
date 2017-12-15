@@ -4,6 +4,7 @@ export interface NinComponent {
   state: Array<{key: string, type: string}>
   actions: {[action: string]: ComponentAction}
   store: {[key: string]: string}
+  initialStore: {[key: string]: string}
   path: string;
   name: string;
   isInline: boolean;
