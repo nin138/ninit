@@ -1,16 +1,17 @@
 import {createTab} from "./util";
+import {Config} from "./Entity/Config";
 
-export const createStore = (modules: Array<{name: string, path: string}>) => {
-  return [createImport(modules),
+export const createStore = (config: Config, modules: Array<{name: string, path: string}>) => {
+  return [createImport(config, modules),
       createCreateStore(modules),
       createState(modules),
       createAction(modules)
   ].join("\n\n");
 };
 
-const createImport = (modules: Array<{name: string, path: string}>) => {
+const createImport = (config: Config, modules: Array<{name: string, path: string}>) => {
   return "import {createStore, combineReducers, Action} from \"redux\"\n" +
-      modules.map(it => `import ${it.name}, {${it.name}Action, ${it.name}State} from "./${it.path}"` )
+      modules.map(it => `import ${it.name}, {${it.name}Action, ${it.name}State} from "./${it.name}Module"` )
           .join("\n");
 };
 

@@ -1,6 +1,6 @@
-import {NinComponent, NinComponentNode} from "./transpiler";
 import {createTab} from "./util";
 import {HTML_TAGS, TEXT_NODE} from "./html_tags";
+import {NinComponent, NinComponentNode} from "./Entity/NinComponent";
 
 
 

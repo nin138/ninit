@@ -1,56 +1,13 @@
 import {readFile} from "./readFile";
-import {Toml} from "./util";
+import {isNinComponent, Toml, toOutPath} from "./util";
 import {toTs} from "./toTs";
 import {mkdirsSync, writeFile} from "fs-extra";
 import {copyTemplate} from "./copyTemplate";
 import {createStore} from "./createStore";
 import * as Path from "path";
 import {createModule} from "./createModule";
-
-export interface Config {
-  group: string
-  project: string
-  version: string
-  root: string
-  outDir: string
-  dependency: Array<string> //["std"]
-  indexPath: string
-}
-
-export interface NinComponent {
-  use: Array<string> | undefined
-  props: Array<{key: string, type: string}>
-  state: Array<{key: string, type: string}>
-  actions: {[actions: string]: ComponentAction}
-  path: string;
-  name: string;
-  isInline: boolean;
-  isFrame: boolean;
-  allowChild: boolean;
-  parent: string;
-  node: Array<NinComponentNode>
-  id: string;
-  editable: {}
-}
-
-export type ComponentAction = {[params: string]: string }
-
-export interface NinComponentNode {
-  tag: string
-  id: string
-  parent: string
-  children: Array<string>
-  className: Array<string>
-  attribute: any
-}
-
-
-
-
-export const isNinComponent = (o: any) => {
-  return true;//todo
-};
-
+import {Config} from "./Entity/Config";
+import {NinComponent} from "./Entity/NinComponent";
 
 const readIndex: () => Promise<Config> = async () => {
   const index = await readFile(process.argv[2] || "index.toml");
@@ -61,7 +18,7 @@ const readIndex: () => Promise<Config> = async () => {
   throw new Error("index.toml require group and project");
 };
 
-const readToml: (path: string, conf: Config) => Promise<NinComponent> = async(path, conf) => {
+const readToml: (path: string) => Promise<NinComponent> = async(path) => {
   const file = await readFile(path);
   const t = Toml.parse(file);
   t.path = Path.dirname(path);
@@ -73,7 +30,7 @@ const readAllToml: (conf: Config) => Promise<Array<NinComponent>> = async(conf) 
   const ret: Array<NinComponent> = [];
   const read = async(path: string) => {
     console.log(path);
-    const c = await readToml(path, conf);
+    const c = await readToml(path);
     ret.push(c);
     if(c.use) {
       c.use.forEach(async it => {
@@ -96,10 +53,6 @@ const writeTs = async(fileName: string, data: string): Promise<{}> => {
   });
 };
 
-const toOutPath = (conf: Config, path: string) => {
-  return Path.join(conf.outDir, path.substring(conf.indexPath.length));
-};
-
 export const transpile = async () => {
   const conf = await readIndex();
   const modules: Array<{name: string, path: string}> = [];
@@ -110,7 +63,7 @@ export const transpile = async () => {
   console.log("writing...");
   for(let c of components) {
     console.log("1");
-    const ts = toTs(c); // require resolve props use children
+    const ts = toTs(c); // todo resolve children's using props
     modules.push({name: c.name, path: c.path});
     console.log("2");
     console.log(`outdir: ${conf.outDir}\ncpath: ${c.path}\ncname: ${c.name}\nout: ${toOutPath(conf, c.path)}`);
@@ -118,7 +71,7 @@ export const transpile = async () => {
     await writeTs(`${toOutPath(conf, c.path)}/${c.name}Module.ts`, createModule(c))
   }
   console.log("index: " + conf.indexPath);
-  await writeFile(`${conf.outDir}/src/store.ts`, createStore(modules));
+  await writeFile(`${conf.outDir}/src/store.ts`, createStore(conf, modules));
 
 };
 

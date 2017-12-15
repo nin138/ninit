@@ -5,10 +5,10 @@ state = []
 text = "string"
 num = "number"
 [actions]
-    [change]
+    [actions.change]
         text = "string"
-    [inc]
-    [dec]
+    [actions.inc]
+    [actions.dec]
         num = "number"
 
 [reducer]

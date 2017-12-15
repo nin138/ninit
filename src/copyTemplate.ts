@@ -1,7 +1,7 @@
 import {copySync} from "fs-extra";
 import {readFile} from "./readFile";
-import {Config} from "./transpiler";
 import {writeFileSync} from "fs";
+import {Config} from "./Entity/Config";
 
 export const copyTemplate = (conf: Config) => {
   // replace ${APP_NAME}

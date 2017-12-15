@@ -1,26 +1,25 @@
-import {ComponentAction, NinComponent} from "./transpiler";
 import {createTab} from "./util";
+import {ComponentAction, NinComponent} from "./Entity/NinComponent";
 
 const createActionNames = (nin: NinComponent) => {
   return `enum ActionNames {\n` +
-      `${Object.keys(nin.actions).map(it => `${createTab(1)}${it} = "${nin.name}.${it}"`).join("\n")}` +
-      "}";
+      `${Object.keys(nin.actions).map(it => `${createTab(1)}${it} = "${nin.name}.${it}"`).join(",\n")}` +
+      "\n}\n";
 };
 
 const createActions = (nin: NinComponent) => {
   const createActionInterface = (name: string, action: ComponentAction) => {
-    return `interface ${nin.name}Action\n {` +
-        + `${createTab(1)}type: ActionNames.${name},` +
-        Object.keys(action).map(param => `${createTab(1)}${param}: ${action[param]}`).join(",\n") +
-        "}";
+    return `interface ${name}Action {\n` +
+        `${createTab(1)}type: ActionNames.${name},` +
+        Object.keys(action).map(param => `\n${createTab(1)}${param}: ${action[param]}`).join(",") +
+        "\n}\n";
   };
 
   const createActionFunc = (name: string, action: ComponentAction) => {
-    return `export const ${name} = (${Object.keys(action).map(param => {`${param}: ${action[param]}`}).join(", ")}) => ({\n` +
-        `${createTab(1)}type: ActionNames.${name},\n` +
-        Object.keys(action).map(it => createTab(1) + it).join(",\n") +
-        "});";
-
+    return `export const ${name} = (${Object.keys(action).map(param => `${param}: ${action[param]}`).join(", ")}) => ({\n` +
+        `${createTab(1)}type: ActionNames.${name},` +
+        Object.keys(action).map(it => "\n" + createTab(1) + it).join(",") +
+        "\n});\n";
   };
 
   return Object.keys(nin.actions).map(name => {
@@ -48,6 +47,7 @@ const createReducer = (nin: NinComponent) => {
 };
 
 export const createModule = (nin: NinComponent) => {
+  console.log(nin);
   return [
       createActionNames(nin),
       createActions(nin),
