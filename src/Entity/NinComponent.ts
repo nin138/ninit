@@ -2,7 +2,7 @@ export interface NinComponent {
   use: Array<string> | undefined
   props: Array<{key: string, type: string}>
   state: Array<{key: string, type: string}>
-  actions: {[actions: string]: ComponentAction}
+  actions: {[action: string]: ComponentAction}
   path: string;
   name: string;
   isInline: boolean;
