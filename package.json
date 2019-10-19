@@ -26,6 +26,7 @@
     "@types/node": "^7.0.5",
     "fs-extra": "^4.0.2",
     "immutable": "^3.8.2",
+    "toml": "^2.3.3",
     "tomlify-j0.4": "^3.0.0",
     "typescript": "^2.5.3"
   },
@@ -33,6 +34,5 @@
   "devDependencies": {
     "ts-loader": "^2.3.7",
     "webpack": "^3.6.0"
-
   }
 }
